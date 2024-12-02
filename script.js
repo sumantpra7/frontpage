@@ -47,24 +47,37 @@ async function downloadPDF() {
     const studentReg = document.getElementById("studentReg").innerText;
     const studentSession = document.getElementById("studentSession").innerText;
 
+    // Set the border style
+    const margin = 10;  // Space around the content
+    const pageWidth = pdf.internal.pageSize.width;
+    const pageHeight = pdf.internal.pageSize.height;
+    
+    // Draw a border (1px thickness, solid black)
+    pdf.setLineWidth(1);
+    pdf.setDrawColor(0, 0, 0);
+    pdf.rect(margin, margin, pageWidth - 2 * margin, pageHeight - 2 * margin);
+
+    // Add the content to the PDF
     pdf.setFontSize(22);
-    pdf.text(universityName, 105, 20, null, null, "center");
+    pdf.text(universityName, pageWidth / 2, 20, null, null, "center");
 
     if (logo) {
-        pdf.addImage(logo, "JPEG", 80, 30, 50, 50);
+        pdf.addImage(logo, "JPEG", pageWidth / 2 - 25, 30, 50, 50);
     }
 
     pdf.setFontSize(16);
-    pdf.text(semester, 105, 100, null, null, "center");
-    pdf.text(subjectCode, 105, 115, null, null, "center");
-    pdf.text(topic, 105, 140, null, null, "center");
+    pdf.text(semester, pageWidth / 2, 100, null, null, "center");
+    pdf.text(subjectCode, pageWidth / 2, 115, null, null, "center");
+    pdf.text(topic, pageWidth / 2, 140, null, null, "center");
 
     pdf.setFontSize(14);
-    pdf.text(studentName, 105, 180, null, null, "center");
-    pdf.text(studentClass, 105, 190, null, null, "center");
-    pdf.text(studentRoll, 105, 200, null, null, "center");
-    pdf.text(studentReg, 105, 210, null, null, "center");
-    pdf.text(studentSession, 105, 220, null, null, "center");
+    pdf.text(studentName, pageWidth / 2, 180, null, null, "center");
+    pdf.text(studentClass, pageWidth / 2, 190, null, null, "center");
+    pdf.text(studentRoll, pageWidth / 2, 200, null, null, "center");
+    pdf.text(studentReg, pageWidth / 2, 210, null, null, "center");
+    pdf.text(studentSession, pageWidth / 2, 220, null, null, "center");
 
+    
     pdf.save("FrontPage.pdf");
 }
+
