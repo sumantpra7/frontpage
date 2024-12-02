@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Front Page Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="form">
+        <label for="universityInput">University Name:</label>
+        <input type="text" id="universityInput" placeholder="Enter University Name">
+
+        <label for="logoInput">Upload University Logo:</label>
+        <input type="file" id="logoInput" accept="image/*">
+
+        <label for="semesterInput">Semester:</label>
+        <input type="text" id="semesterInput" placeholder="Enter Semester">
+
+        <label for="subjectCodeInput">Subject Code:</label>
+        <input type="text" id="subjectCodeInput" placeholder="Enter Subject Code">
+
+        <label for="topicInput">Topic:</label>
+        <input type="text" id="topicInput" placeholder="Enter Topic">
+
+        <label for="nameInput">Name:</label>
+        <input type="text" id="nameInput" placeholder="Enter Your Name">
+
+        <label for="rollNoInput">Roll Number:</label>
+        <input type="text" id="rollNoInput" placeholder="Enter Roll Number">
+
+        <label for="regNoInput">Registration Number:</label>
+        <input type="text" id="regNoInput" placeholder="Enter Registration Number">
+
+        <label for="sessionInput">Session:</label>
+        <input type="text" id="sessionInput" placeholder="Enter Session">
+
+        <button onclick="generatePreview()">Generate Preview</button>
+        <button onclick="downloadPDF()">Download PDF</button>
+    </div>
+
+    <div class="container" id="preview">
+        <h1 class="bold" id="universityName">University Name</h1>
+        <img id="logoPreview" class="logo" alt="University Logo" />
+        <div class="section">
+            <p id="semester" class="center"></p>
+            <p id="subjectCode" class="center"></p>
+        </div>
+        <div class="section">
+            <h2 id="topic"></h2>
+        </div>
+        <div class="section bottom">
+            <p id="studentName"></p>
+            <p id="studentClass"></p>
+            <p id="studentRoll"></p>
+            <p id="studentReg"></p>
+            <p id="studentSession"></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+</body>
+</html>
