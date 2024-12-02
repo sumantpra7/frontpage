@@ -8,6 +8,9 @@ Customizable: Fill in details like university name, semester, subject code, topi
 Logo Upload: Upload your college logo to make the front page look official.
 Downloadable PDF: Instantly download the generated front page as a PDF.
 Mobile-Friendly: Fully responsive design for access on smartphones.
+
+
+
 📋 How to Use
 Open the Tool: Visit the hosted website or download the files and open index.html in your browser.
 Fill Out the Form:
@@ -21,10 +24,17 @@ Submit: Print the downloaded PDF or share it digitally!
 its designed and developed by sumant kumar from jharkhand raksha sakti university 
 key point to develop this 
 Many student of my batch dont have laptop so it will be benifical for them 
+
+
+
+
 🛠️ Technology Stack
 HTML: For structure.
 CSS: For styling and responsiveness.
 JavaScript: For functionality (live preview and PDF generation).
 jsPDF: To generate PDFs in the browser.
+
+
 ✨ Acknowledgments
 This project was created to help fellow students. Your feedback and suggestions are highly appreciated!
+copyright sumant kumar
