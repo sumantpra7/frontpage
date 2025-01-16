@@ -8,20 +8,20 @@ function generatePreview() {
     const regNo = document.getElementById("regNoInput").value;
     const session = document.getElementById("sessionInput").value;
 
-    // Update the preview section
+    
     document.getElementById("universityName").innerText = universityName;
     document.getElementById("semester").innerText = `Semester: ${semester}`;
     document.getElementById("subjectCode").innerText = `Subject Code: ${subjectCode}`;
     document.getElementById("topic").innerText = `Topic: ${topic}`;
 
-    // Update bottom section fields
+    
     document.getElementById("studentName").innerText = `Name: ${name}`;
     document.getElementById("studentClass").innerText = `Class: BCACS`;
     document.getElementById("studentRoll").innerText = `Roll No: ${rollNo}`;
     document.getElementById("studentReg").innerText = `Reg No: ${regNo}`;
     document.getElementById("studentSession").innerText = `Session: ${session}`;
 
-    // Display the logo
+   
     const logoInput = document.getElementById("logoInput");
     if (logoInput.files && logoInput.files.length > 0) {
         const reader = new FileReader();
@@ -47,17 +47,17 @@ async function downloadPDF() {
     const studentReg = document.getElementById("studentReg").innerText;
     const studentSession = document.getElementById("studentSession").innerText;
 
-    // Set the border style
-    const margin = 10;  // Space around the content
+    
+    const margin = 10;  
     const pageWidth = pdf.internal.pageSize.width;
     const pageHeight = pdf.internal.pageSize.height;
     
-    // Draw a border (1px thickness, solid black)
+    
     pdf.setLineWidth(1);
     pdf.setDrawColor(0, 0, 0);
     pdf.rect(margin, margin, pageWidth - 2 * margin, pageHeight - 2 * margin);
 
-    // Add the content to the PDF
+    
     pdf.setFontSize(22);
     pdf.text(universityName, pageWidth / 2, 20, null, null, "center");
 
