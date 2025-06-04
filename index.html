@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chatbot Front Page Generator</title>
+  <style>
+    :root {
+      --bg-color: #f0f2f5;
+      --text-color: #000;
+      --box-bg: #fff;
+      --border-color: #000;
+    }
+
+    body.dark {
+      --bg-color: #121212;
+      --text-color: #fff;
+      --box-bg: #1e1e1e;
+      --border-color: #fff;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      padding: 20px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    #chat {
+      max-width: 600px;
+      margin: auto;
+      background: var(--box-bg);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .message {
+      margin: 10px 0;
+    }
+
+    .bot {
+      text-align: left;
+    }
+
+    .user {
+      text-align: right;
+    }
+
+    input[type="text"],
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+    }
+
+    button {
+      margin: 10px 5px 0 0;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #printBtn {
+      background-color: #28a745;
+    }
+
+    #printBtn:hover {
+      background-color: #218838;
+    }
+
+    .page {
+      page-break-after: always;
+      background: white;
+      padding: 60px;
+      margin: 20px auto;
+      width: 21cm;
+      min-height: 29.7cm;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+    }
+
+    .centered {
+      text-align: center;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 20px 0;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .submitted-box {
+      border: 2px solid var(--border-color);
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 20px;
+      margin-top: 50px;
+      margin-bottom: 30px;
+      font-weight: bold;
+    }
+
+    .signature-line {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 100px;
+      font-weight: bold;
+    }
+
+    .bottom-right {
+      margin-top: 100px;
+      text-align: right;
+      font-size: 14px;
+    }
+
+    .bottom-right p {
+      margin: 5px 0;
+    }
+
+    .bottom-right strong {
+      font-weight: bold;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+
+      .page, .page * {
+        visibility: visible;
+      }
+
+      .page {
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="chat"></div>
+  <button id="printBtn" onclick="printDocument()">🖨️ Print</button>
+  <button onclick="toggleDarkMode()">🌓 Toggle Dark Mode</button>
+  <div id="output"></div>
+
+  <script>
+    const chat = document.getElementById("chat");
+    const output = document.getElementById("output");
+    const userData = {};
+    const steps = [
+      { key: "name", question: "What is your full name?" },
+      { key: "roll", question: "Enter your Roll Number" },
+      { key: "reg", question: "Enter your Registration Number" },
+      { key: "session", question: "Enter your Session (e.g., 2023-2026)" },
+      { key: "semester", question: "Enter your Semester (e.g., Sem-3)" },
+      { key: "subject", question: "Enter your Subject/Topic Name" },
+      { key: "logo", question: "Please upload your University Logo", type: "file" },
+    ];
+
+    let currentStep = 0;
+
+    function addMessage(text, sender = "bot") {
+      const msg = document.createElement("div");
+      msg.className = `message ${sender}`;
+      msg.innerHTML = `<p>${text}</p>`;
+      chat.appendChild(msg);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function nextStep() {
+      if (currentStep < steps.length) {
+        const step = steps[currentStep];
+        if (step.type === "file") {
+          addMessage(step.question);
+          const input = document.createElement("input");
+          input.type = "file";
+          input.accept = "image/*";
+          input.required = true;
+          input.onchange = () => {
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              userData[step.key] = e.target.result;
+              currentStep++;
+              nextStep();
+            };
+            reader.readAsDataURL(file);
+          };
+          chat.appendChild(input);
+        } else {
+          addMessage(step.question);
+          const input = document.createElement("input");
+          input.type = "text";
+          input.required = true;
+          input.onkeypress = function (e) {
+            if (e.key === "Enter" && input.value.trim() !== "") {
+              userData[step.key] = input.value.trim();
+              addMessage(input.value, "user");
+              input.remove();
+              currentStep++;
+              nextStep();
+            }
+          };
+          chat.appendChild(input);
+          input.focus();
+        }
+      } else {
+        showFinalButtons();
+      }
+    }
+
+    function showFinalButtons() {
+      addMessage("All inputs received! What would you like to add?");
+      const ackBtn = document.createElement("button");
+      ackBtn.textContent = "Add Acknowledgment";
+      ackBtn.onclick = generateAcknowledgment;
+      chat.appendChild(ackBtn);
+
+      const certBtn = document.createElement("button");
+      certBtn.textContent = "Add Certificate";
+      certBtn.onclick = generateCertificate;
+      chat.appendChild(certBtn);
+
+      const frontPageBtn = document.createElement("button");
+      frontPageBtn.textContent = "Add Front Page";
+      frontPageBtn.onclick = generateFrontPage;
+      chat.appendChild(frontPageBtn);
+    }
+
+    function generateFrontPage() {
+      const html = `
+        <div class="page">
+          <div class="centered">
+            <h2 style="font-weight: bold; text-transform: uppercase;">JHARKHAND RAKSHA SHAKTI UNIVERSITY, RANCHI</h2>
+            <img src="${userData.logo}" alt="Logo" style="max-height:120px; margin: 30px auto; display: block;" />
+            <p style="margin-top: 30px;"><strong>BCACS ${userData.semester.toUpperCase()} PAPER (301PR)</strong></p>
+            <p>B.Sc in COMPUTER SCIENCE & APPLICATION</p>
+            <p>Practical on “${userData.subject}”</p>
+            <div class="submitted-box">Submitted By</div>
+            <p>Name :- ${userData.name}</p>
+            <p>Roll No:- ${userData.roll}</p>
+            <p>Reg. No:- ${userData.reg}</p>
+            <p>Session :- ${userData.session}</p>
+          </div>
+        </div>`;
+      output.innerHTML += html;
+    }
+
+    function generateAcknowledgment() {
+      const html = `
+        <div class="page">
+          <div class="section-title">Acknowledgment</div>
+          <p>This Assignment has been developed on the basis of lectures delivered by “Ms. SUCHI PRIYA” in our class. I would like to thank her wholeheartedly for her noble guidance and super teaching. She also encouraged me a lot while I was dealing with the assignment.</p>
+          <p>Last but not the least, my special thanks to all the staff members of department, to all my friends and my family for their contribution in everything that I do and also for their uncanny ability to come up with suggestions which helped me a lot in completing this assignment successfully.</p>
+          <div class="bottom-right">
+            <p>Name :- ${userData.name}</p>
+            <p>Roll No:- <strong>${userData.roll}</strong></p>
+            <p>Reg. No:- ${userData.reg}</p>
+            <p>Session :- ${userData.session}</p>
+          </div>
+        </div>`;
+      output.innerHTML += html;
+    }
+
+    function generateCertificate() {
+      const html = `
+        <div class="page">
+          <div class="section-title">Certificate</div>
+          <p>This is to certify that ${userData.name}, session ${userData.session} participated in this Assignment work in relation to the topic “${userData.subject}” as regular student of B.Sc in Computer Science & Application (BCACS), ${userData.semester}, from Jharkhand Raksha Shakti University, Ranchi.</p>
+          <p>I hereby declare that all information made by me is true in the best of my knowledge and I submit this assignment to the department of “BCACS” in Jharkhand Raksha Shakti University, Ranchi.</p>
+          <div class="signature-line">
+            <span>Internal Signature:</span>
+            <span>External Signature:</span>
+          </div>
+        </div>`;
+      output.innerHTML += html;
+    }
+
+    function printDocument() {
+      window.print();
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+    }
+
+    nextStep();
+  </script>
+</body>
+</html>
